@@ -8,6 +8,7 @@ import Signup from 'pages/Signup';
 import Login from 'pages/Login';
 import MyInfo from 'pages/MyInfo';
 import Notification from 'pages/Notification';
+import Post from 'pages/Post';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/myinfo" element={<MyInfo />} />
           <Route path="/notification" element={<Notification />} />
+          <Route path="/post" element={<Post />} />
         </Route>
       </Routes>
     </>

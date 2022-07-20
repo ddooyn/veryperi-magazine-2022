@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 const Home = () => {
   return (
-    <div>
+    <section>
       <h2>Home</h2>
       <p>
         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id error nobis
@@ -17,8 +19,17 @@ const Home = () => {
         quisquam non eaque nesciunt quas expedita quo? Officia error odio quae.
         Reiciendis minima dolorum eos laborum commodi!
       </p>
-    </div>
+      <PostBtn to="/post">
+        <img src="img/addbtn.png" alt="글 작성 페이지로 가기" />
+      </PostBtn>
+    </section>
   );
 };
 
 export default Home;
+
+const PostBtn = styled(Link)`
+  position: fixed;
+  bottom: 15px;
+  right: 25px;
+`;
