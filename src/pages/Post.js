@@ -14,6 +14,10 @@ const Post = () => {
   const [imgSrc, setImgSrc] = useState('');
   const textRef = useRef('');
   const [typed, setTyped] = useState('내용을 입력하면 여기에 표시됩니다');
+  const [layout, setLayout] = useState({
+    col: false,
+    rev: false,
+  });
 
   const onTyping = () => {
     setTyped(textRef.current.value);
@@ -68,21 +72,37 @@ const Post = () => {
           <h3>레이아웃 선택</h3>
           <Radios>
             <div>
-              <input type="radio" name="layout" id="layout-a" defaultChecked />
+              <input
+                type="radio"
+                name="layout"
+                id="layout-a"
+                defaultChecked
+                onClick={() => setLayout({ col: false, rev: false })}
+              />
               <label htmlFor="layout-a">사진/글(좌우)</label>
             </div>
             <div>
-              <input type="radio" name="layout" id="layout-b" />
+              <input
+                type="radio"
+                name="layout"
+                id="layout-b"
+                onClick={() => setLayout({ col: false, rev: true })}
+              />
               <label htmlFor="layout-b">글/사진(좌우)</label>
             </div>
             <div>
-              <input type="radio" name="layout" id="layout-c" />
+              <input
+                type="radio"
+                name="layout"
+                id="layout-c"
+                onClick={() => setLayout({ col: true, rev: false })}
+              />
               <label htmlFor="layout-c">글/사진(상하)</label>
             </div>
           </Radios>
         </Row>
 
-        <Preview>
+        <Preview col={layout.col} rev={layout.rev}>
           <ImgLabel>{imgSrc && <img src={imgSrc} alt="" />}</ImgLabel>
           <p>{typed}</p>
         </Preview>
@@ -105,6 +125,7 @@ const Post = () => {
 };
 
 export default Post;
+
 const PostSection = styled.section`
   display: flex;
   flex-direction: column;
@@ -194,7 +215,8 @@ const Radios = styled.div`
 
 const Preview = styled.div`
   display: flex;
-  /* flex-direction: column-reverse; */
+  flex-direction: ${({ col, rev }) =>
+    col ? 'column-reverse' : rev ? 'row-reverse' : 'row'};
   justify-content: space-around;
   align-items: center;
   p {
