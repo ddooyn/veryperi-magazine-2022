@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { collection, addDoc } from 'firebase/firestore';
+import { auth, db } from 'shared/firebase';
+
 const Signup = () => {
   const navigate = useNavigate();
   const {
@@ -14,9 +18,20 @@ const Signup = () => {
     mode: 'onTouched',
   });
 
-  const onSubmit = () => {
-    return false;
-    alert('회원가입 성공! 환영합니다:)');
+  const onSubmit = async (data) => {
+    const user = await createUserWithEmailAndPassword(
+      auth,
+      data.email,
+      data.password
+    );
+
+    await addDoc(collection(db, 'users'), {
+      userId: user.user.uid,
+      email: data.email,
+      nickname: data.nickname,
+    });
+
+    alert('회원가입 성공! 로그인 페이지로 이동합니다:)');
     navigate('/login');
   };
 
@@ -88,10 +103,9 @@ const Signup = () => {
             {...register('passwordConfirmation', {
               required: '* 비밀번호 확인을 입력해주세요',
               validate: {
-                matchesPreviousPassword: (value) => {
-                  const { password } = getValues();
-                  return password === value || '* 비밀번호가 일치하지 않습니다';
-                },
+                matchesPreviousPassword: (value) =>
+                  getValues('password') === value ||
+                  '* 비밀번호가 일치하지 않습니다',
               },
             })}
           />
