@@ -13,26 +13,40 @@ const Signup = () => {
     register,
     getValues,
     handleSubmit,
+    setValue,
+    setFocus,
     formState: { errors, isValid },
   } = useForm({
     mode: 'onTouched',
   });
 
   const onSubmit = async (data) => {
-    const user = await createUserWithEmailAndPassword(
-      auth,
-      data.email,
-      data.password
-    );
+    try {
+      const user = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
 
-    await addDoc(collection(db, 'users'), {
-      userId: user.user.uid,
-      email: data.email,
-      nickname: data.nickname,
-    });
+      await addDoc(collection(db, 'users'), {
+        userId: user.user.uid,
+        email: data.email,
+        nickname: data.nickname,
+      });
 
-    alert('회원가입 성공! 로그인 페이지로 이동합니다:)');
-    navigate('/login');
+      alert('회원가입 성공! 로그인 페이지로 이동합니다:)');
+      navigate('/login');
+    } catch (err) {
+      if (err.code === 'auth/email-already-in-use') {
+        alert('이미 가입된 이메일입니다.');
+        setValue('email', '');
+        setValue('nickname', '');
+        setValue('password', '');
+        setValue('passwordConfirmation', '');
+        setFocus('email');
+        return;
+      }
+    }
   };
 
   return (
