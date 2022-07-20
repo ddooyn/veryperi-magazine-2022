@@ -1,42 +1,43 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 
 const Post = () => {
   const {
+    register,
+    setValue,
     handleSubmit,
     formState: { isValid },
   } = useForm({
     mode: 'all',
   });
 
-  const [imgName, setImgName] = useState('');
   const [imgSrc, setImgSrc] = useState('');
-  const textRef = useRef('');
-  const [typed, setTyped] = useState('내용을 입력하면 여기에 표시됩니다');
+  const [typed, setTyped] = useState('');
   const [layout, setLayout] = useState({
     col: false,
     rev: false,
   });
 
-  const onTyping = () => {
-    setTyped(textRef.current.value);
+  const onTyping = (e) => {
+    setTyped(e.target.value);
   };
 
   const previewImage = async (e) => {
     const image = e.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(image);
+
     return new Promise((resolve) => {
       reader.onload = () => {
-        setImgName(image.name);
+        setValue('filename', image.name);
         setImgSrc(reader.result);
         resolve();
       };
     });
   };
 
-  const onSubmit = async (data) => {
+  const onSubmitPost = async (data) => {
     return;
   };
 
@@ -46,21 +47,26 @@ const Post = () => {
         포스트<span>작성</span>
       </h2>
 
-      <PostForm onSubmit={handleSubmit(onSubmit)}>
+      <PostForm id="post-form" onSubmit={handleSubmit(onSubmitPost)}>
         <Row className="row-img">
           <input
             id="file"
             type="file"
             accept="image/*"
-            onChange={previewImage}
             hidden
+            {...register('file', {
+              required: true,
+              onChange: (e) => previewImage(e),
+            })}
           />
           <ImgNameLabel>
             <ImgNameInput
               type="text"
               placeholder="사진을 첨부해주세요"
-              value={imgName}
               readOnly
+              {...register('filename', {
+                required: true,
+              })}
             />
           </ImgNameLabel>
           <ImgAddBtn htmlFor="file">
@@ -104,20 +110,23 @@ const Post = () => {
 
         <Preview col={layout.col} rev={layout.rev}>
           <ImgLabel>{imgSrc && <img src={imgSrc} alt="" />}</ImgLabel>
-          <p>{typed}</p>
+          <p>{typed ? typed : '내용을 입력하면 여기에 표시됩니다'}</p>
         </Preview>
 
         <Row>
           <h3>포스트 내용</h3>
           <PostTextArea
-            ref={textRef}
-            onChange={onTyping}
             placeholder="포스트 내용을 입력하세요 :)"
             spellCheck="false"
+            {...register('content', {
+              required: true,
+              onChange: (e) => onTyping(e),
+            })}
           />
         </Row>
       </PostForm>
-      <Button type="submit" disabled={!isValid}>
+
+      <Button type="submit" form="post-form" disabled={!isValid}>
         게시글 작성하기
       </Button>
     </PostSection>
