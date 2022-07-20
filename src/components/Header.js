@@ -1,12 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
-import { isLoggedInAtom } from 'shared/atoms';
+
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { isLoggedInAtom, usernameAtom } from 'shared/atoms';
+import { auth } from 'shared/firebase';
+import { signOut } from 'firebase/auth';
 
 const Header = () => {
   const isLoggedIn = useRecoilValue(isLoggedInAtom);
-  console.log(isLoggedIn);
+  const [username, setUsername] = useRecoilState(usernameAtom);
 
   return (
     <header>
@@ -15,16 +18,25 @@ const Header = () => {
           <img src="/img/logo.png" alt="메인 페이지로 가기" />
         </Link>
         <Menu>
-          {isLoggedIn ? (
+          {isLoggedIn && username ? (
             <>
-              {' '}
               <li>
-                <Link to="/myinfo">내정보</Link>
+                <Link to="/myinfo">{username}님 반갑습니다:)</Link>
               </li>
               <li>
                 <Link to="/notification">알림</Link>
               </li>
-              <li>로그아웃</li>
+              <li>
+                <button
+                  onClick={() => {
+                    setUsername('');
+                    signOut(auth);
+                    alert('로그아웃 되었습니다 :)');
+                  }}
+                >
+                  로그아웃
+                </button>
+              </li>
             </>
           ) : (
             <>
@@ -50,20 +62,28 @@ export default Header;
 const Navbar = styled.nav`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  /* align-items: flex-start; */
 `;
 
-const Menu = styled.div`
+const Menu = styled.ul`
   display: flex;
   color: #555;
   gap: 15px;
-  & li {
+  li {
     transition: 0.1s color ease-in-out;
     cursor: pointer;
     &:hover {
       color: #000;
     }
+    button {
+      font-size: inherit;
+      color: inherit;
+    }
   }
+`;
+
+const SubMenu = styled.ul`
+  display: flex;
 `;
 
 const Title = styled.h1`

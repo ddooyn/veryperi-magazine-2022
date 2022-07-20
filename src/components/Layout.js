@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Header from './Header';
+import Header from 'components/Header';
+import { auth } from 'shared/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { useSetRecoilState } from 'recoil';
+import { isLoggedInAtom } from 'shared/atoms';
 
 const Layout = () => {
+  const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
+  const toggleIsLoggedIn = useCallback(
+    async (user) => (user ? setIsLoggedIn(true) : setIsLoggedIn(false)),
+    [setIsLoggedIn]
+  );
+
+  useEffect(() => {
+    onAuthStateChanged(auth, toggleIsLoggedIn);
+  }, [toggleIsLoggedIn]);
+
   return (
     <Main>
       <Header />
