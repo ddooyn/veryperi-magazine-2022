@@ -2,7 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { useRecoilValue } from 'recoil';
+import { isLoggedInAtom } from 'shared/atoms';
+
 const Home = () => {
+  const isLoggedIn = useRecoilValue(isLoggedInAtom);
+
   return (
     <section>
       <h2>Home</h2>
@@ -19,9 +24,12 @@ const Home = () => {
         quisquam non eaque nesciunt quas expedita quo? Officia error odio quae.
         Reiciendis minima dolorum eos laborum commodi!
       </p>
-      <PostBtn to="/post">
-        <img src="img/addbtn.png" alt="글 작성 페이지로 가기" />
-      </PostBtn>
+      
+      {isLoggedIn ? (
+        <PostBtn to="/post">
+          <img src="img/addbtn.png" alt="글 작성 페이지로 가기" />
+        </PostBtn>
+      ) : null}
     </section>
   );
 };
