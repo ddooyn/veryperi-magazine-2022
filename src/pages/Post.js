@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 
@@ -12,6 +12,12 @@ const Post = () => {
 
   const [imgName, setImgName] = useState('');
   const [imgSrc, setImgSrc] = useState('');
+  const textRef = useRef('');
+  const [typed, setTyped] = useState('내용을 입력하면 여기에 표시됩니다');
+
+  const onTyping = () => {
+    setTyped(textRef.current.value);
+  };
 
   const previewImage = async (e) => {
     const image = e.target.files[0];
@@ -78,16 +84,14 @@ const Post = () => {
 
         <Preview>
           <ImgLabel>{imgSrc && <img src={imgSrc} alt="" />}</ImgLabel>
-          <p>텍스트</p>
+          <p>{typed}</p>
         </Preview>
 
         <Row>
           <h3>포스트 내용</h3>
           <PostTextArea
-            // ref={ref}
-            // onChange={onChange}
-            // onInput={resizeHeight}
-            // value={typed}
+            ref={textRef}
+            onChange={onTyping}
             placeholder="포스트 내용을 입력하세요 :)"
             spellCheck="false"
           />
@@ -107,7 +111,7 @@ const PostSection = styled.section`
   align-items: center;
   justify-content: center;
   h2 {
-    margin-bottom: 10px;
+    margin: -40px 0 10px;
     span {
       color: #6768ab;
     }
@@ -201,11 +205,12 @@ const Preview = styled.div`
 
 const PostTextArea = styled.textarea`
   width: 100%;
+  height: 150px;
   margin-top: 12px;
   padding: 30px;
   border: 1px solid #aaa;
   background: none;
-  font-size: 18px;
+  font-size: 16px;
   outline: none;
   resize: none;
   &::placeholder {
@@ -214,7 +219,7 @@ const PostTextArea = styled.textarea`
 `;
 
 const Button = styled.button`
-  padding: 20px;
+  padding: 20px 40px;
   background: #222;
   color: #fff;
   font-size: 16px;
