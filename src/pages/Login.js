@@ -3,20 +3,49 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { getDocs, where, query, collection } from 'firebase/firestore';
+import { auth, db } from 'shared/firebase';
+import { useSetRecoilState } from 'recoil';
+import { usernameAtom } from 'shared/atoms';
+
 const Login = () => {
   const navigate = useNavigate();
+  const setUsername = useSetRecoilState(usernameAtom);
   const {
     register,
     handleSubmit,
+    setValue,
+    setFocus,
     formState: { isValid },
   } = useForm({
-    mode: 'onTouched',
+    mode: 'onChange',
   });
 
-  const onSubmit = () => {
-    return false;
-    alert('로그인 성공!');
-    navigate('/');
+  const onSubmit = async (data) => {
+    try {
+      const user = await signInWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+
+      const userDoc = await getDocs(
+        query(collection(db, 'users'), where('userId', '==', user.user.uid))
+      );
+      await userDoc.forEach((user) => {
+        setUsername(user.data().nickname);
+      });
+
+      alert('로그인 성공!');
+      navigate('/');
+    } catch (err) {
+      alert('아이디 또는 비밀번호가 일치하지 않습니다');
+      setValue('email', '');
+      setValue('password', '');
+      setFocus('email');
+      return;
+    }
   };
 
   return (
@@ -50,7 +79,6 @@ const Login = () => {
             })}
           />
         </Row>
-        {/* TODO: <Error>* 아이디나 비밀번호가 일치하지 않습니다</Error> */}
       </Form>
 
       <Button type="submit" form="login-form" disabled={!isValid}>
