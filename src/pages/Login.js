@@ -126,11 +126,6 @@ const Row = styled.div`
   }
 `;
 
-const Error = styled.p`
-  font-size: 14px;
-  color: #6768ab;
-`;
-
 const Button = styled.button`
   padding: 20px;
   background: #222;

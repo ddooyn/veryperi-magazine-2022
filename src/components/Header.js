@@ -62,13 +62,15 @@ export default Header;
 const Navbar = styled.nav`
   display: flex;
   justify-content: space-between;
-  /* align-items: flex-start; */
 `;
 
 const Menu = styled.ul`
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
   color: #555;
-  gap: 15px;
+  gap: 0 15px;
   li {
     transition: 0.1s color ease-in-out;
     cursor: pointer;
