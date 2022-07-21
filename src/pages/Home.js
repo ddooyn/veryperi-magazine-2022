@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { getPosts } from 'redux/modules/postSlice';
 import { useRecoilValue } from 'recoil';
 import { isLoggedInAtom } from 'shared/atoms';
 
 const Home = () => {
   const isLoggedIn = useRecoilValue(isLoggedInAtom);
+  const dispatch = useDispatch();
+  const postList = useSelector((state) => state.post);
+
+  useEffect(() => {
+    dispatch(getPosts());
+  }, []);
+  console.log(postList);
 
   return (
     <section>
@@ -24,7 +32,7 @@ const Home = () => {
         quisquam non eaque nesciunt quas expedita quo? Officia error odio quae.
         Reiciendis minima dolorum eos laborum commodi!
       </p>
-      
+
       {isLoggedIn ? (
         <PostBtn to="/post">
           <img src="img/addbtn.png" alt="글 작성 페이지로 가기" />

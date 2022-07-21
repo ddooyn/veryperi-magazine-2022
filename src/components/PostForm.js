@@ -1,8 +1,19 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { createPost } from 'redux/modules/postSlice';
+import { useRecoilValue } from 'recoil';
+import { usernameAtom } from 'shared/atoms';
+import { storage } from 'shared/firebase';
+import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
 
 const PostForm = () => {
+  const username = useRecoilValue(usernameAtom);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const {
     register,
     setValue,
@@ -38,7 +49,22 @@ const PostForm = () => {
   };
 
   const onSubmitPost = async (data) => {
-    return;
+    const uploadedFile = await uploadBytes(
+      ref(storage, `images/${data.filename}`),
+      data.file[0]
+    );
+    const fileUrl = await getDownloadURL(uploadedFile.ref);
+
+    const newPost = {
+      username,
+      image: fileUrl,
+      content: data.content,
+      layout,
+      createdAt: Date.now(),
+    };
+    dispatch(createPost(newPost));
+    alert('포스트가 등록되었습니다!');
+    navigate('/');
   };
 
   return (
@@ -122,7 +148,7 @@ const PostForm = () => {
         </Row>
       </Form>
       <Button type="submit" form="post-form" disabled={!isValid}>
-        게시글 작성하기
+        포스트 작성하기
       </Button>
     </>
   );
