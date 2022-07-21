@@ -1,19 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const PostArticle = ({ post }) => {
   const { id, image, content, username, createdAt, layout } = post;
   return (
     <Article>
-      <ArticleHeader>
-        <ProfileImg src="img/profile.png" alt="" />
-        <Username>{username}</Username>
-        <Created>{new Date(createdAt).toLocaleString()}</Created>
-      </ArticleHeader>
-      <Content col={layout.col} rev={layout.rev}>
-        <Image src={image} alt="" />
-        <p>{content}</p>
-      </Content>
+      <ArticleLink to={`/post/${id}`}>
+        <ArticleHeader>
+          <ProfileImg src="/img/profile.png" alt="" />
+          <Username>{username}</Username>
+          <Created>{new Date(createdAt).toLocaleString()}</Created>
+        </ArticleHeader>
+        <Content col={layout.col} rev={layout.rev}>
+          <Image src={image} alt="" />
+          <p>{content}</p>
+        </Content>
+      </ArticleLink>
     </Article>
   );
 };
@@ -21,13 +24,21 @@ const PostArticle = ({ post }) => {
 export default PostArticle;
 
 const Article = styled.article`
-  padding: 15px 10px 30px;
+  padding: 20px 10px 25px;
   border-bottom: 1px solid #555;
   &:nth-child(odd) {
     background: #f5f5f5;
   }
   @media only screen and (max-width: 512px) {
     padding: 10px 0;
+  }
+`;
+
+const ArticleLink = styled(Link)`
+  display: block;
+  transition: 0.3s all ease-in-out;
+  &:hover {
+    transform: translateY(-5px);
   }
 `;
 
@@ -72,11 +83,13 @@ const Content = styled.section`
 
 const Image = styled.img`
   margin: auto;
-  width: calc(70vw - 50%);
+  width: calc(80vw - 50%);
+  min-width: 300px;
   max-width: 450px;
   object-fit: cover;
   aspect-ratio: 4 / 3;
   @media only screen and (max-width: 512px) {
     width: 100%;
+    min-width: auto;
   }
 `;

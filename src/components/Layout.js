@@ -24,7 +24,7 @@ const Layout = () => {
 
   useEffect(() => {
     dispatch(getPosts());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Main>

@@ -9,6 +9,7 @@ import Login from 'pages/Login';
 import MyInfo from 'pages/MyInfo';
 import Notification from 'pages/Notification';
 import Post from 'pages/Post';
+import PostDetail from 'pages/PostDetail';
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/myinfo" element={<MyInfo />} />
           <Route path="/notification" element={<Notification />} />
           <Route path="/post" element={<Post />} />
+          <Route path="/post/:id" element={<PostDetail />} />
         </Route>
       </Routes>
     </>
