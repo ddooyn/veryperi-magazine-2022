@@ -84,10 +84,6 @@ const Menu = styled.ul`
   }
 `;
 
-const SubMenu = styled.ul`
-  display: flex;
-`;
-
 const Title = styled.h1`
   display: flex;
   flex-direction: column;

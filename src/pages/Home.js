@@ -1,20 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
-import { getPosts } from 'redux/modules/postSlice';
 import { useRecoilValue } from 'recoil';
 import { isLoggedInAtom } from 'shared/atoms';
 
 const Home = () => {
   const isLoggedIn = useRecoilValue(isLoggedInAtom);
-  const dispatch = useDispatch();
-  const postList = useSelector((state) => state.post);
-
-  useEffect(() => {
-    dispatch(getPosts());
-  }, []);
-  console.log(postList);
 
   return (
     <section>

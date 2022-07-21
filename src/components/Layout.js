@@ -1,14 +1,18 @@
 import React, { useCallback, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
-
-import Header from 'components/Header';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPosts } from 'redux/modules/postSlice';
 import { auth } from 'shared/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useSetRecoilState } from 'recoil';
 import { isLoggedInAtom } from 'shared/atoms';
 
+import Header from 'components/Header';
+
 const Layout = () => {
+  const dispatch = useDispatch();
+  const postList = useSelector((state) => state.post);
   const setIsLoggedIn = useSetRecoilState(isLoggedInAtom);
   const toggleIsLoggedIn = useCallback(
     async (user) => (user ? setIsLoggedIn(true) : setIsLoggedIn(false)),
@@ -18,6 +22,11 @@ const Layout = () => {
   useEffect(() => {
     onAuthStateChanged(auth, toggleIsLoggedIn);
   }, [toggleIsLoggedIn]);
+
+  useEffect(() => {
+    dispatch(getPosts());
+  }, []);
+  console.log(postList);
 
   return (
     <Main>
