@@ -35,7 +35,7 @@ const postSlice = createSlice({
   reducers: {},
   extraReducers: {
     [getPosts.fulfilled]: (state, { payload }) => payload,
-    [createPost.fulfilled]: (state, { payload }) => [...state, payload],
+    [createPost.fulfilled]: (state, { payload }) => [payload, ...state],
   },
 });
 

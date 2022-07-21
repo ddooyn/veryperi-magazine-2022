@@ -1,29 +1,22 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { isLoggedInAtom } from 'shared/atoms';
+import { useSelector, useDispatch } from 'react-redux';
+import PostArticle from 'components/PostArticle';
 
 const Home = () => {
   const isLoggedIn = useRecoilValue(isLoggedInAtom);
+  const postList = useSelector((state) => state.post);
+  console.log(postList);
 
   return (
     <section>
-      <h2>Home</h2>
-      <p>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Id error nobis
-        explicabo. Consequuntur aspernatur unde, aperiam eum nam, adipisci in
-        dignissimos fugiat iusto, ipsam consequatur eaque iure. Officia
-        doloribus animi blanditiis earum fugiat corrupti unde deleniti ipsam,
-        itaque obcaecati inventore culpa labore voluptas fuga? Voluptate,
-        quisquam consequatur laborum doloremque nulla veniam repellat veritatis
-        necessitatibus numquam ab suscipit ex a asperiores dignissimos est
-        iusto? Harum sed quis culpa? Voluptatem cumque ducimus officiis tempora,
-        doloribus, fugiat sunt, numquam rerum debitis enim et ab animi sint
-        quisquam non eaque nesciunt quas expedita quo? Officia error odio quae.
-        Reiciendis minima dolorum eos laborum commodi!
-      </p>
-
+      <h2 hidden>메인 페이지 모든 포스트 보기</h2>
+      {postList.map((post) => (
+        <PostArticle key={post.id} post={post} />
+      ))}
       {isLoggedIn ? (
         <PostBtn to="/post">
           <img src="img/addbtn.png" alt="글 작성 페이지로 가기" />
