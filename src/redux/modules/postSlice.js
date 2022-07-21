@@ -1,13 +1,22 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { db } from 'shared/firebase';
-import { getDocs, addDoc, collection } from 'firebase/firestore';
+import {
+  getDocs,
+  addDoc,
+  collection,
+  query,
+  orderBy,
+} from 'firebase/firestore';
 
 export const getPosts = createAsyncThunk('post/getPosts', async () => {
-  const posts = await getDocs(collection(db, 'posts'));
+  const postsRef = collection(db, 'posts');
+  const posts = await getDocs(query(postsRef, orderBy('createdAt', 'desc')));
+
   let postList = [];
   posts.forEach((doc) => {
     postList.push({ id: doc.id, ...doc.data() });
   });
+
   return postList;
 });
 
